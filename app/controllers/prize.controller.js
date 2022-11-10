@@ -11,6 +11,17 @@ exports.findAll = (req, res) => {
     });
 };
 
+exports.findPrizeWithEmp = (req, res) => {
+  Prize.findPrizeWithEmp((err, data) => {
+        if (err)
+          res.status(500).send({
+            message:
+              err.message || "Some error occurred while retrieving prize"
+          });
+        else res.send(data);
+    });
+};
+
 exports.findOne = (req, res) => {
   Prize.findById(req.params.pcode, (err, data) => {
         if (err) {

@@ -6,6 +6,7 @@ const prize = require("../controllers/prize.controller")
 const authenBasic = require('../middlewares/authentication.middleware')
 
 router.get("/v1/prize", prize.findAll)
+router.get("/v1/prize_result", prize.findPrizeWithEmp)
 router.get("/v1/prize/:pcode", prize.findOne)
 router.get("/v1/prize_type/:ptype", prize.findWithType)
 router.get("/v1/prize_emp/:empid", prize.findWithEmp)

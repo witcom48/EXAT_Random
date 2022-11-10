@@ -48,7 +48,7 @@ exports.create = (req, res) => {
     
     Checkin.create(model, (err, data) => {
       if (err)
-      res.status(500).send({
+      res.send({
           success:false,
           message:
           err.message || "Some error occurred while creating the Checkin"
@@ -63,11 +63,11 @@ exports.delete = (req, res) => {
   Checkin.remove(req.body.empid, (err, data) => {
         if (err) {
           if (err.status === "not_found") {
-            res.status(404).send({
+            res.send({
               message: `Not found empid with id ${req.body.empid}.`
             });
           } else {
-            res.status(500).send({
+            res.send({
               message: "Could not delete empid with id " + req.body.empid
             });
           }

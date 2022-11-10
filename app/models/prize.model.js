@@ -74,6 +74,25 @@ Prize.findByEmp = (empId, result) => {
   });
 };
 
+
+Prize.findPrizeWithEmp = result => {
+  sql.query(`SELECT prize.pcode, prize.pdesc, IFNULL(flag, '') AS flag, IFNULL(empid, '-- รอจับรางวัล --') AS empid, IFNULL(name, '') AS name, IFNULL(famname, '') AS famname, IFNULL(depabb, '') AS depabb FROM prize LEFT JOIN employee ON employee.prize_pcode=prize.pcode ORDER BY prize.ptype, prize.pcode`, (err, res) => {
+    if (err) {
+      //console.log("error: ", err);
+      result(err, null);
+      return;
+    }
+
+    if (res.length) {
+      //console.log("found prize: ", res[0]);
+      result(null, res[0]);
+      return;
+    }      
+    result({ kind: "not_found" }, null);
+  });
+};
+
+
 Prize.updateFlag = (input, result) => {
   sql.query(
     "UPDATE randomprize.employee SET flag=? WHERE empid = ?",
