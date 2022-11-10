@@ -85,7 +85,7 @@ Prize.findPrizeWithEmp = result => {
 
     if (res.length) {
       //console.log("found prize: ", res[0]);
-      result(null, res[0]);
+      result(null, res);
       return;
     }      
     result({ kind: "not_found" }, null);
