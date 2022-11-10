@@ -3,11 +3,12 @@ const Checkin = require("../models/checkin.model")
 exports.findAll = (req, res) => {
   Checkin.getAll((err, data) => {
         if (err)
-          res.status(500).send({
+          res.send({
+            success:false,
             message:
               err.message || "Some error occurred while retrieving checkin"
           });
-        else res.send(data);
+        else res.send({success:true, data:data});
     });
 };
 
@@ -16,15 +17,17 @@ exports.findOne = (req, res) => {
   Checkin.findById(req.params.empid, (err, data) => {
         if (err) {
           if (err.kind === "not_found") {
-            res.status(404).send({
+            res.send({
+              success:false,
               message: `Not found checkin with empid ${req.params.empid}.`
             });
           } else {
-            res.status(500).send({
+            res.send({
+              success:false,
               message: "Error retrieving checkin with empid " + req.params.empid
             });
           }
-        } else res.send(data);
+        } else res.send({success:true, data:data});
     });
 };
 
@@ -64,14 +67,16 @@ exports.delete = (req, res) => {
         if (err) {
           if (err.status === "not_found") {
             res.send({
+              success:false,
               message: `Not found empid with id ${req.body.empid}.`
             });
           } else {
             res.send({
+              success:false,
               message: "Could not delete empid with id " + req.body.empid
             });
           }
-        } else res.send({ message: `checkin was deleted successfully!` });
+        } else res.send({ success:true, message: `checkin was deleted successfully!` });
     });
 };
 

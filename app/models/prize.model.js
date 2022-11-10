@@ -43,13 +43,13 @@ Prize.findByType = (typeId, result) => {
 
   sql.query(`SELECT * FROM randomprize.prize WHERE ptype = '${typeId}'`, (err, res) => {
     if (err) {
-      console.log("error: ", err);
+      //console.log("error: ", err);
       result(err, null);
       return;
     }
 
     if (res.length) {
-      console.log("found prize: ", res);
+      //console.log("found prize: ", res);
       result(null, res);
       return;
     }      
