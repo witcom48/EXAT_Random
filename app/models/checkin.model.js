@@ -1,4 +1,4 @@
-const sql = require("../db");
+const connect = require("../db");
 
 // constructor
 const Checkin = function(checkin) {
@@ -10,7 +10,8 @@ const Checkin = function(checkin) {
 };
 
 Checkin.getAll = result => {
-    sql.query("SELECT * FROM randomprize.checkin", (err, res) => {
+  sql = connect();
+  sql.query("SELECT * FROM randomprize.checkin", (err, res) => {
       if (err) {
         console.log("error: ", err);
         result(null, err);
@@ -18,11 +19,15 @@ Checkin.getAll = result => {
       } 
       
       result(null, res);
-    });
+
+      sql.end()
+    });       
 };
 
 Checkin.findById = (empId, result) => {
-    sql.query(`SELECT * FROM randomprize.checkin WHERE empid = ${empId}`, (err, res) => {
+    
+  sql = connect();
+  sql.query(`SELECT * FROM randomprize.checkin WHERE empid = ${empId}`, (err, res) => {
       if (err) {
         //console.log("error: ", err);
         result(err, null);
@@ -35,10 +40,14 @@ Checkin.findById = (empId, result) => {
         return;
       }      
       result({ kind: "not_found" }, null);
+
+      sql.end() 
     });
+       
 };
 
 Checkin.create = (newImport, result) => {
+  sql = connect();
   sql.query("INSERT INTO randomprize.checkin SET ?", newImport, (err, res) => {
     if (err) {      
       result(err, null);
@@ -64,13 +73,15 @@ Checkin.create = (newImport, result) => {
       }
     );
 
+    sql.end()  
+
   });
 };
 
 
 
 Checkin.remove = (empId, result) => {
-  //console.log(empId)
+  sql = connect();
   sql.query("DELETE FROM randomprize.checkin WHERE empid = ?", empId, (err, res) => {
     if (err) {
       console.log("error: ", err);
@@ -101,6 +112,9 @@ Checkin.remove = (empId, result) => {
         result(null, res);
       }
     );
+
+    sql.end()  
+
   });
 };
 

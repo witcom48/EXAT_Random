@@ -1,4 +1,4 @@
-const sql = require("../db");
+const connect = require("../db");
 
 // constructor
 const Prize = function(prize) {
@@ -9,6 +9,7 @@ const Prize = function(prize) {
 };
 
 Prize.getAll = result => {
+    sql = connect();
     sql.query("SELECT * FROM randomprize.prize", (err, res) => {
       if (err) {
         //console.log("error: ", err);
@@ -17,10 +18,12 @@ Prize.getAll = result => {
       } 
       
       result(null, res);
+      sql.end()
     });
 };
 
 Prize.findById = (codeId, result) => {
+  sql = connect();
     sql.query(`SELECT * FROM randomprize.prize WHERE pcode = '${codeId}'`, (err, res) => {
       if (err) {
         //console.log("error: ", err);
@@ -34,12 +37,13 @@ Prize.findById = (codeId, result) => {
         return;
       }      
       result({ kind: "not_found" }, null);
+      sql.end()
     });
 };
 
 Prize.findByType = (typeId, result) => {
 
-  console.log(typeId)
+  sql = connect();
 
   sql.query(`SELECT * FROM randomprize.prize WHERE ptype = '${typeId}'`, (err, res) => {
     if (err) {
@@ -54,10 +58,12 @@ Prize.findByType = (typeId, result) => {
       return;
     }      
     result({ kind: "not_found" }, null);
+    sql.end()
   });
 };
 
 Prize.findByEmp = (empId, result) => {
+  sql = connect();
   sql.query(`SELECT empid, name, famname, depabb, prize.pcode, prize.pdesc, IFNULL(flag, '') AS flag FROM employee INNER JOIN prize ON employee.prize_pcode=prize.pcode WHERE empid = ${empId}`, (err, res) => {
     if (err) {
       //console.log("error: ", err);
@@ -71,11 +77,13 @@ Prize.findByEmp = (empId, result) => {
       return;
     }      
     result({ kind: "not_found" }, null);
+    sql.end()
   });
 };
 
 
 Prize.findPrizeWithEmp = result => {
+  sql = connect();
   sql.query(`SELECT prize.pcode, prize.pdesc, IFNULL(flag, '') AS flag, IFNULL(empid, '-- รอจับรางวัล --') AS empid, IFNULL(name, '') AS name, IFNULL(famname, '') AS famname, IFNULL(depabb, '') AS depabb FROM prize LEFT JOIN employee ON employee.prize_pcode=prize.pcode ORDER BY prize.ptype, prize.pcode`, (err, res) => {
     if (err) {
       //console.log("error: ", err);
@@ -89,11 +97,13 @@ Prize.findPrizeWithEmp = result => {
       return;
     }      
     result({ kind: "not_found" }, null);
+    sql.end()
   });
 };
 
 
 Prize.updateFlag = (input, result) => {
+  sql = connect();
   sql.query(
     "UPDATE randomprize.employee SET flag=? WHERE empid = ?",
     [input.flag, input.empid],
@@ -111,7 +121,9 @@ Prize.updateFlag = (input, result) => {
 
       //console.log("updated employee: ", { empid: input.empid, ...employee });
       result(null, { empid: input.empid });
-    }
+
+      sql.end()
+    }    
   );
 };
 

@@ -1,19 +1,24 @@
-const mysql = require("mysql2");
-const dbConfig = require("./configs/db.config.js");
 
-// Create a connection to the database
+module.exports = function () {
 
-const connection = mysql.createConnection({
-  host: dbConfig.HOST,
-  user: dbConfig.USER,
-  password: dbConfig.PASSWORD,
-  database: dbConfig.DB
-});
+  const mysql = require("mysql2");
+  const dbConfig = require("./configs/db.config.js");
 
-// open the MySQL connection
-connection.connect(error => {
-  if (error) throw error;
-  console.log("Successfully connected to the database.");
-});
+  // Create a connection to the database
 
-module.exports = connection;
+  const connection = mysql.createConnection({
+    host: dbConfig.HOST,
+    user: dbConfig.USER,
+    password: dbConfig.PASSWORD,
+    database: dbConfig.DB
+  });
+
+  // open the MySQL connection
+  connection.connect(error => {
+    if (error) throw error;
+    console.log("Successfully connected to the database.");
+  });
+
+  
+  return connection
+}
