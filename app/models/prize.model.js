@@ -110,7 +110,7 @@ Prize.updateFlag = (input, result) => {
       }
 
       //console.log("updated employee: ", { empid: input.empid, ...employee });
-      result(null, { success:true, empid: input.empid });
+      result(null, { empid: input.empid });
     }
   );
 };
