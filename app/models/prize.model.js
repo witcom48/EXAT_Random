@@ -10,7 +10,7 @@ const Prize = function(prize) {
 
 Prize.getAll = result => {
     sql = connect();
-    sql.query("SELECT * FROM randomprize.prize2", (err, res) => {
+    sql.query("SELECT * FROM randomprize.prize", (err, res) => {
       if (err) {    
         result(null, err)
         sql.end()
