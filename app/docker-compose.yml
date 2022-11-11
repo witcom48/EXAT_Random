@@ -1,0 +1,14 @@
+version: "3.9"
+
+services:
+  random:
+    image: random-test
+    build: .
+    networks:
+      - compose_network
+    ports:
+      - 8089:4000
+ 
+networks:
+  compose_network:
+     external: true

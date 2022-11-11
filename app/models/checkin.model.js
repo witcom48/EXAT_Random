@@ -12,14 +12,13 @@ const Checkin = function(checkin) {
 Checkin.getAll = result => {
   sql = connect();
   sql.query("SELECT * FROM randomprize.checkin", (err, res) => {
-      if (err) {
-        console.log("error: ", err);
-        result(null, err);
+      if (err) {        
+        result(null, err)
+        sql.end()
         return;
       } 
       
-      result(null, res);
-
+      result(null, res)
       sql.end()
     });       
 };
@@ -28,19 +27,18 @@ Checkin.findById = (empId, result) => {
     
   sql = connect();
   sql.query(`SELECT * FROM randomprize.checkin WHERE empid = ${empId}`, (err, res) => {
-      if (err) {
-        //console.log("error: ", err);
-        result(err, null);
+      if (err) {        
+        result(err, null)
+        sql.end()
         return;
       }
   
-      if (res.length) {
-        //console.log("found checkin: ", res[0]);
-        result(null, res[0]);
+      if (res.length) {        
+        result(null, res[0])
+        sql.end()
         return;
       }      
-      result({ kind: "not_found" }, null);
-
+      result({ kind: "not_found" }, null)
       sql.end() 
     });
        
@@ -50,7 +48,8 @@ Checkin.create = (newImport, result) => {
   sql = connect();
   sql.query("INSERT INTO randomprize.checkin SET ?", newImport, (err, res) => {
     if (err) {      
-      result(err, null);
+      result(err, null)
+      sql.end()
       return;
     }
 
@@ -59,17 +58,18 @@ Checkin.create = (newImport, result) => {
       ["checkin", newImport.empid],      
       (err, res) => {
         if (err) {          
-          result(null, err);
+          result(null, err)
+          sql.end()
           return;
         }
   
         if (res.affectedRows == 0) {         
-          result({ status: "not_found" }, null);
+          result({ status: "not_found" }, null)
+          sql.end()
           return;
         }
   
-        //console.log("created checkin: ", { id: res.insertId, ...newImport });
-        result(null, { id: res.insertId, ...newImport });
+        result(null, { id: res.insertId, ...newImport })
       }
     );
 
@@ -85,12 +85,14 @@ Checkin.remove = (empId, result) => {
   sql.query("DELETE FROM randomprize.checkin WHERE empid = ?", empId, (err, res) => {
     if (err) {
       console.log("error: ", err);
-      result(null, err);
+      result(null, err)
+      sql.end()
       return;
     }
 
     if (res.affectedRows == 0) {      
-      result({ status: "not_found" }, null);
+      result({ status: "not_found" }, null)
+      sql.end()
       return;
     }
    
@@ -99,17 +101,18 @@ Checkin.remove = (empId, result) => {
       ["", empId],      
       (err, res) => {
         if (err) {         
-          result(null, err);
+          result(null, err)
+          sql.end()
           return;
         }
   
         if (res.affectedRows == 0) {          
-          result({ status: "not_found" }, null);
+          result({ status: "not_found" }, null)
+          sql.end()
           return;
         }
-  
-        //console.log("deleted checkin with empid: ", empId);
-        result(null, res);
+        
+        result(null, res)
       }
     );
 
