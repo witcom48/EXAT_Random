@@ -95,7 +95,7 @@ Prize.findPrizeWithEmp = result => {
 
     if (res.length) {
       result(null, res)
-      sql.end()
+      //sql.end()
       return;
     }      
     result({ kind: "not_found" }, null)

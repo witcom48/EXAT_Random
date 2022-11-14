@@ -12,6 +12,18 @@ exports.findAll = (req, res) => {
     });
 };
 
+exports.findAllCheckin = (req, res) => {
+  Checkin.getAllCheckin((err, data) => {
+        if (err)
+          res.send({
+            success:false,
+            message:
+              err.message || "Some error occurred while retrieving checkin"
+          });
+        else res.send({success:true, data:data});
+    });
+};
+
 exports.findOne = (req, res) => {
 
   Checkin.findById(req.params.empid, (err, data) => {
@@ -57,6 +69,9 @@ exports.create = (req, res) => {
           err.message || "Some error occurred while creating the Checkin"
       });
       else {        
+
+        console.log(data)
+
         res.send({success:true, data:data});
       }
   });

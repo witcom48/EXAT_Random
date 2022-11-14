@@ -11,6 +11,7 @@ const app = express();
 const prize = require('./routes/prize.routes')
 const checkin = require('./routes/checkin.routes')
 const user = require('./routes/user.routes')
+const employee = require('./routes/employee.routes')
 
 //-- Config
 app.use(bodyParser.json());
@@ -29,6 +30,7 @@ app.get("/home", (req, res) => {
 app.use(checkin)
 app.use(prize)
 app.use(user)
+app.use(employee)
 
 // setting port to 3000, & listening for requests http request.
 app.listen(4000, () => {
