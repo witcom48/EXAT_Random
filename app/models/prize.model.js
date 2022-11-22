@@ -11,34 +11,34 @@ const Prize = function(prize) {
 Prize.getAll = result => {
     sql = connect();
     sql.query("SELECT * FROM randomprize.prize", (err, res) => {
-      if (err) {    
-        result(null, err)
-        sql.end()
-        return;
-      } 
       
-      result(null, res)
-      sql.end()
+      sql.end();
+
+      if (err) {    
+        result(err, null)       
+      }
+      else{
+        result(null, res)
+      }       
     });
 };
 
 Prize.findById = (codeId, result) => {
   sql = connect();
     sql.query(`SELECT * FROM randomprize.prize WHERE pcode = '${codeId}'`, (err, res) => {
-      if (err) {
-     
-        result(err, null)
-        sql.end()
-        return;
+      
+      sql.end();
+
+      if (err) {     
+        result(err, null);       
       }
-  
-      if (res.length) {       
-        result(null, res[0])
-        sql.end()
-        return;
-      }      
-      result({ kind: "not_found" }, null)
-      sql.end()
+      else if (res.length) { 
+        result(null, res[0]);
+      }
+      else{
+        result({ status: "not_found" }, null)
+      } 
+      
     });
 };
 
@@ -47,39 +47,37 @@ Prize.findByType = (typeId, result) => {
   sql = connect();
 
   sql.query(`SELECT * FROM randomprize.prize WHERE ptype = '${typeId}'`, (err, res) => {
+    
+    sql.end();
+    
     if (err) {  
-      result(err, null)
-      sql.end()
-      return;
+      result(err, null);      
     }
-
-    if (res.length) {      
-      result(null, res)
-      sql.end()
-      return;
-    }      
-    result({ kind: "not_found" }, null);
-    sql.end()
+    else if (res.length) {  
+      result(null, res);
+    }
+    else{
+      result({ status: "not_found" }, null);
+    }    
   });
 };
 
 Prize.findByEmp = (empId, result) => {
   sql = connect();
-  sql.query(`SELECT empid, name, famname, depabb, prize.pcode, prize.pdesc, IFNULL(flag, '') AS flag FROM employee INNER JOIN prize ON employee.prize_pcode=prize.pcode WHERE empid = ${empId}`, (err, res) => {
-    if (err) {
+  sql.query(`SELECT empid, name, famname, depabb, prize.pcode, prize.pdesc, IFNULL(receive_status, '') AS receive_status, IFNULL(receive_by, '') AS receive_by, receive_date FROM employee INNER JOIN prize ON employee.prize_pcode=prize.pcode WHERE empid = ${empId}`, (err, res) => {
     
-      result(err, null)
-      sql.end()
-      return;
+    sql.end();
+    
+    if (err) {    
+      result(err, null);     
     }
-
-    if (res.length) {  
-      result(null, res[0]);
-      sql.end()
-      return;
+    else if (res.length) {  
+      result(null, res[0]);     
     }      
-    result({ kind: "not_found" }, null)
-    sql.end()
+    else{
+      result({ status: "not_found" }, null);
+    }
+    
   });
 };
 
@@ -87,19 +85,19 @@ Prize.findByEmp = (empId, result) => {
 Prize.findPrizeWithEmp = result => {
   sql = connect();
   sql.query(`SELECT prize.pcode, prize.pdesc, IFNULL(flag, '') AS flag, IFNULL(empid, '-- รอจับรางวัล --') AS empid, IFNULL(name, '') AS name, IFNULL(famname, '') AS famname, IFNULL(depabb, '') AS depabb FROM prize LEFT JOIN employee ON employee.prize_pcode=prize.pcode ORDER BY prize.ptype, prize.pcode`, (err, res) => {
+    
+    sql.end();
+    
     if (err) {
-      result(err, null)
-      sql.end()
-      return;
+      result(err, null);           
     }
-
-    if (res.length) {
-      result(null, res)
-      //sql.end()
-      return;
+    else if (res.length) {
+      result(null, res);    
     }      
-    result({ kind: "not_found" }, null)
-    sql.end()
+    else{
+      result({ status: "not_found" }, null)
+    }
+    
   });
 };
 
@@ -107,24 +105,23 @@ Prize.findPrizeWithEmp = result => {
 Prize.updateFlag = (input, result) => {
   sql = connect();
   sql.query(
-    "UPDATE randomprize.employee SET flag=? WHERE empid = ?",
-    [input.flag, input.empid],
+    "UPDATE randomprize.employee SET receive_status=?, receive_by=?, receive_date=? WHERE empid = ?",
+    [input.receive_status, input.receive_by, new Date(), input.empid],
     
     (err, res) => {
+
+      sql.end();
+
       if (err) {        
-        result(null, err)
-        sql.end()
-        return;
+        result(err, null);       
+      }
+      else if (res.affectedRows == 0) {             
+        result({ status: "not_found" }, null);        
+      }
+      else{
+        result(null, { empid: input.empid, receive_status: input.receive_status  });
       }
 
-      if (res.affectedRows == 0) {       
-        result({ status: "not_found" }, null)
-        sql.end()
-        return;
-      }
-
-      result(null, { empid: input.empid })
-      sql.end()
     }    
   );
 };

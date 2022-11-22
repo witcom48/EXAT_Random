@@ -9,50 +9,44 @@ const Employee = function(employee) {
 Employee.findById = (empId, result) => {
   sql = connect();
     sql.query(`SELECT * FROM randomprize.employee WHERE empid = '${empId}'`, (err, res) => {
-      if (err) {
-     
-        result(err, null)
-        sql.end()
-        return;
+      
+      sql.end();
+      
+      if (err) {     
+        result(err, null);      
       }
-  
-      if (res.length) {       
-        result(null, res[0])
-        sql.end()
-        return;
-      }      
-      result({ kind: "not_found" }, null)
-      sql.end()
+      else if (res.length) {       
+        result(null, res[0]);       
+      }  
+      else{
+        result({ status: "not_found" }, null);
+      }          
     });
 };
 
-Employee.getSummaryEmp = result => {
-    sql = connect();
+Employee.findAllPrize = (status, result) => {
+  sql = connect();
 
-    query = "select COUNT(empid) as emp_all";
-    query += ", SUM(case when shift='Y' then 1 else 0 end) AS emp_shift";
-    query += ", SUM(case when flag='checkin' then 1 else 0 end) AS emp_checkin";
-    query += " from randomprize.employee";
+    var condition = " "
 
-    //console.log(query)
+    if(status != "all"){
+      condition = " AND receive_status='" + status + "' "
+    }
 
-    sql.query(query, (err, res) => {
-      if (err) {
-     
-        result(err, null)
-        sql.end()
-        return;
+    sql.query(`SELECT * FROM randomprize.employee WHERE not(prize_pcode is null) ` + condition, (err, res) => {
+      
+      sql.end();
+      
+      if (err) {     
+        result(err, null);      
       }
-  
-      if (res.length) {       
-        result(null, res)
-        sql.end()
-        return;
-      }      
-      result({ kind: "not_found" }, null)
-      sql.end()
+      else if (res.length) {       
+        result(null, res);       
+      }  
+      else{
+        result({ status: "not_found" }, null);
+      }          
     });
 };
-
 
 module.exports = Employee;

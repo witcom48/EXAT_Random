@@ -12,14 +12,15 @@ const Checkin = function(checkin) {
 Checkin.getAll = result => {
   sql = connect();
   sql.query("SELECT * FROM randomprize.checkin", (err, res) => {
+    sql.end()
+
       if (err) {        
-        result(null, err)
-        sql.end()
-        return;
+        result(err, null)        
       } 
+      else{
+        result(null, res)
+      }
       
-      result(null, res)
-      sql.end()
     });       
 };
 
@@ -27,19 +28,18 @@ Checkin.findById = (empId, result) => {
     
   sql = connect();
   sql.query(`SELECT * FROM randomprize.checkin WHERE empid = ${empId}`, (err, res) => {
+      
+    sql.end() 
+
       if (err) {        
-        result(err, null)
-        sql.end()
-        return;
-      }
-  
-      if (res.length) {        
-        result(null, res[0])
-        sql.end()
-        return;
+        result(err, null)       
+      }else if (res.length) {        
+        result(null, res[0])        
       }      
-      result({ kind: "not_found" }, null)
-      sql.end() 
+      else{
+        result({ status: "not_found" }, null)
+      }
+     
     });
        
 };
@@ -52,14 +52,14 @@ Checkin.getAllCheckin = result => {
   query += " FROM randomprize.checkin INNER JOIN randomprize.employee ON randomprize.employee.empid=randomprize.checkin.empid ORDER BY randomprize.employee.depabb, randomprize.employee.empid";
 
   sql.query(query, (err, res) => {
+    sql.end()
+    
       if (err) {        
-        result(null, err)
-        sql.end()
-        return;
+        result(err, null)        
       } 
-      
-      result(null, res)
-      sql.end()
+      else{
+        result(null, res)
+      }     
     });       
 };
 
@@ -109,14 +109,15 @@ Checkin.remove = (empId, result) => {
 function recordCheckin(newImport, result) {
   sql = connect();
   sql.query("INSERT INTO randomprize.checkin SET ?", newImport, (err, res) => {
+    
+    sql.end() 
+    
     if (err) {      
-      result(err, null)     
-      sql.end() 
-      return;
+      result(err, null)          
     }
-
-    result(null, { id: res.insertId, ...newImport })
-    sql.end()
+    else{
+      result(null, { id: res.insertId, ...newImport })
+    }
 
   });
 }
@@ -124,14 +125,15 @@ function recordCheckin(newImport, result) {
 function removeCheckin(empId, result) {
   sql = connect();
   sql.query("DELETE FROM randomprize.checkin WHERE empid = ?", empId, (err, res) => {
-    if (err) {      
-      result(err, null)     
-      sql.end() 
-      return;
-    }
 
-    result(null, { success: true })
-    sql.end()
+    sql.end() 
+
+    if (err) {      
+      result(err, null)   
+    }
+    else{
+      result(null, { success: true })
+    }
 
   });
 }
@@ -142,26 +144,23 @@ function updateFlag(empid, flag, result) {
     "UPDATE randomprize.employee SET flag=? WHERE empid = ?",
     [flag, empid],      
     (err, res) => {
-      if (err) {          
-        result(err, null)        
-        sql.end()
-        return;
-      }
 
-      if (res.affectedRows == 0) {         
-        result({ status: "not_found" }, null)       
-        sql.end() 
-        return;
+      sql.end()
+
+      if (err) {          
+        result(err, null) 
+      }
+      else if (res.affectedRows == 0) {         
+        result({ status: "not_found" }, null)    
+      }
+      else{
+        result(null, { success: true })
       }
       
-      result(null, { success: true })
-      sql.end()
     }
   );
   
 }
-
-
 
 
 module.exports = Checkin;

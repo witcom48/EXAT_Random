@@ -28,7 +28,7 @@ exports.findOne = (req, res) => {
 
   Checkin.findById(req.params.empid, (err, data) => {
         if (err) {
-          if (err.kind === "not_found") {
+          if (err.status === "not_found") {
             res.send({
               success:false,
               message: `Not found checkin with empid ${req.params.empid}.`

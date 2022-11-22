@@ -27,7 +27,7 @@ exports.findPrizeWithEmp = (req, res) => {
 exports.findOne = (req, res) => {
   Prize.findById(req.params.pcode, (err, data) => {
         if (err) {
-          if (err.kind === "not_found") {
+          if (err.status === "not_found") {
             res.send({
               success:false,
               message: `Not found prize with id ${req.params.pcode}.`
@@ -45,7 +45,7 @@ exports.findOne = (req, res) => {
 exports.findWithType = (req, res) => {
   Prize.findByType(req.params.ptype, (err, data) => {
         if (err) {
-          if (err.kind === "not_found") {
+          if (err.status === "not_found") {
             res.send({
               success:false,
               message: `Not found prize with id ${req.params.ptype}.`
@@ -63,7 +63,7 @@ exports.findWithType = (req, res) => {
 exports.findWithEmp = (req, res) => {
   Prize.findByEmp(req.params.empid, (err, data) => {
         if (err) {
-          if (err.kind === "not_found") {
+          if (err.status === "not_found") {
             res.send({
               success:false,
               message: `Not found prize with empid ${req.params.empid}.`
@@ -89,7 +89,7 @@ exports.updateFlag = (req, res) => {
   }
 
   Prize.updateFlag(
-      {flag:req.body.flag, empid:req.body.empid},
+      {receive_status:req.body.flag, receive_by:req.body.create_by, empid:req.body.empid},
       (err, data) => {
           if (err) {
           if (err.status === "not_found") {
