@@ -56,7 +56,8 @@ function getPrize(body, result) {
 function getPrizeAllEmp(body, result) {    
   Employee.findAllPrize('all', (err, data) => {        
       if (err != null){
-          result({"success": false, message: "Not Found Employee "}, null)
+          //result({"success": false, message: "Not Found Employee "}, null)
+          result(null, {count:0})
       }
       else{
           result(null, {count:data.length})
