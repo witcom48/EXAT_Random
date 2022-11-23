@@ -105,8 +105,8 @@ Prize.findPrizeWithEmp = result => {
 Prize.updateFlag = (input, result) => {
   sql = connect();
   sql.query(
-    "UPDATE randomprize.employee SET receive_status=?, receive_by=?, receive_date=? WHERE empid = ?",
-    [input.receive_status, input.receive_by, new Date(), input.empid],
+    "UPDATE randomprize.employee SET receive_status=?, receive_by=?, receive_date=current_timestamp() WHERE empid = ?",
+    [input.receive_status, input.receive_by, input.empid],
     
     (err, res) => {
 

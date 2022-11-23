@@ -32,7 +32,25 @@ app.use(prize)
 app.use(user)
 app.use(employee)
 
+
+let dateFormat = new Date()
+
+// Methods on Date Object will convert from UTC to users timezone
+// Set minutes to current minutes (UTC) + User local time UTC offset
+
+//const date = new Date()
+//console.log( convertTZ(date, "Asia/Bangkok"))
+
+//const str = new Date().toLocaleString('en-US', { timeZone: 'Asia/Jakarta' });
+
+//var aa = new Date(str);
+
+//console.log(aa);
+//console.log(str);
+
 // setting port to 3000, & listening for requests http request.
 app.listen(4000, () => {
   console.log("Server is running on port 4000.");
 });
+
+
