@@ -84,7 +84,7 @@ Prize.findByEmp = (empId, result) => {
 
 Prize.findPrizeWithEmp = result => {
   sql = connect();
-  sql.query(`SELECT prize.pcode, prize.pdesc, IFNULL(empid, '') AS empid, IFNULL(name, '') AS name, IFNULL(famname, '') AS famname, CONCAT(divabb, secabb, depabb) AS depabb, IFNULL(receive_status, '') AS receive_status, IFNULL(receive_by, '') AS receive_by, receive_date FROM prize LEFT JOIN employee ON employee.prize_pcode=prize.pcode ORDER BY prize.ptype, prize.pcode`, (err, res) => {
+  sql.query(`SELECT prize.pcode, prize.pdesc, IFNULL(empid, '') AS empid, IFNULL(name, '') AS name, IFNULL(famname, '') AS famname, IFNULL(CONCAT(divabb, secabb, depabb), '') AS depabb, IFNULL(receive_status, '') AS receive_status, IFNULL(receive_by, '') AS receive_by, receive_date FROM prize LEFT JOIN employee ON employee.prize_pcode=prize.pcode ORDER BY prize.ptype, prize.pcode`, (err, res) => {
    
     sql.end();
     

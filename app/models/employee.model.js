@@ -30,10 +30,10 @@ Employee.findAllPrize = (status, result) => {
     var condition = " "
 
     if(status != "all"){
-      condition = " AND receive_status='" + status + "' "
+      condition = " WHERE receive_status='" + status + "' "
     }
 
-    sql.query(`SELECT * FROM randomprize.employee WHERE not(prize_pcode is null) ` + condition, (err, res) => {
+    sql.query(` SELECT empid, name, famname, CONCAT(divabb, secabb, depabb) AS depabb, prize.pcode, prize.pdesc, IFNULL(receive_status, '') AS receive_status, IFNULL(receive_by, '') AS receive_by, receive_date FROM employee INNER JOIN prize ON employee.prize_pcode=prize.pcode ` + condition, (err, res) => {
       
       sql.end();
       
